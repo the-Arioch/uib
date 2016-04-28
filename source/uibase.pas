@@ -3954,6 +3954,8 @@ begin
   begin
   {$IFDEF MSWINDOWS}
     FGDS32Lib := LoadLibrary(PChar(lib));
+    if not Loaded then // fbEmbed with sub-DLLs in intl\*.dll
+       FGDS32Lib := LoadLibraryEx(PChar(ExpandUNCFileName(lib)), 0, LOAD_WITH_ALTERED_SEARCH_PATH);
   {$ENDIF MSWINDOWS}
   {$IFDEF UNIX}
     FCryptLib := dlopen('libcrypt.so', RTLD_GLOBAL); // Service
