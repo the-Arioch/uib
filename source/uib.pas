@@ -1237,6 +1237,10 @@ uses
 {$ENDIF}
   uibmetadata;
 
+{$T-}
+// UIB uses unsafe pointer casts. This makes it compilable not merely as standlone packages
+//   but also as a part in applications hardened with Typed Pointers switch engaged
+
 type
   PExceptionInfo = ^TExceptionInfo;
   TExceptionInfo = record
