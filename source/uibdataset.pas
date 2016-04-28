@@ -197,6 +197,11 @@ type
     procedure ParamsSetBlob(const Name: string; Buffer: Pointer; Size: Word); overload;
 
     property InternalFields: TSQLResult read GetInternalFields;
+
+{$IFDEF DELPHI14_UP}
+    function All<T>: IUIBEnumerable<T>;
+    function Select<T>(const AFilter: TUIBMethodFilter<T>): IUIBEnumerable<T>;
+{$ENDIF}
   end;
 
   TUIBDataSet = class(TUIBCustomDataSet)
@@ -1202,6 +1207,20 @@ begin
   Result := InternalGetFieldData(Field.FieldNo, Buffer, NativeFormat)
 end;
 {$ENDIF}
+{$ENDIF}
+
+
+{$IFDEF DELPHI14_UP}
+function TUIBCustomDataSet.All<T>: IUIBEnumerable<T>;
+begin
+  Result := FStatement.All<T>();
+end;
+
+function TUIBCustomDataSet.Select<T>(
+  const AFilter: TUIBMethodFilter<T>): IUIBEnumerable<T>;
+begin
+  Result := FStatement.Select<T>(AFilter);
+end;
 {$ENDIF}
 
 { TUIBBCDField }
