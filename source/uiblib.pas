@@ -5394,7 +5394,8 @@ end;
 
   procedure TSQLResult.GetRecord(const Index: Integer);
   begin
-    if (Index <> FCurrentRecord) and (FRecordPool <> nil) then
+    if (Index <> FCurrentRecord) and (FRecordPool <> nil)
+       and (Index < FRecordPool.ItemCount) then
     begin
       Move(FRecordPool[Index]^, FDataBuffer^, FDataBufferLength);
       FCurrentRecord := Index;
