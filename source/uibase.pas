@@ -847,6 +847,7 @@ const
   blr_exception_msg = 6;
 {$IFDEF FB30_UP}
   blr_exception_params = 7;
+  blr_sql_state        = 8;
 {$ENDIF}
 
   blr_version4 = 4;
@@ -1192,7 +1193,7 @@ const
   blr_cursor_close = 1;
   blr_cursor_fetch = 2;
 {$ENDIF FB20_UP}
-{$IFDEF FB30_UP}
+{$IFDEF         FB30_UP}
   blr_cursor_fetch_scroll = 3;
 
   // scroll options
@@ -1253,6 +1254,8 @@ const
   blr_subproc               = 206;
   blr_subfunc_decl          = 207;
   blr_subfunc               = 208;
+  blr_record_version2       = 209;
+  blr_gen_id2               = 210;
 {$ENDIF}
 
 (**********************************
@@ -1378,7 +1381,18 @@ const
 {$ENDIF}
 
 {$IFDEF FB30_UP}
-  isc_dpb_auth_block = 79;
+  isc_dpb_auth_block          = 79;
+  isc_dpb_client_version      = 80;
+  isc_dpb_remote_protocol     = 81;
+  isc_dpb_host_name           = 82;
+  isc_dpb_os_user             = 83;
+  isc_dpb_specific_auth_data  = 84;
+  isc_dpb_auth_plugin_list    = 85;
+  isc_dpb_auth_plugin_name    = 86;
+  isc_dpb_config              = 87;
+  isc_dpb_nolinger            = 88;
+  isc_dpb_reset_icu           = 89;
+  isc_dpb_map_attach          = 90;
 {$ENDIF}
 
 {$IFDEF IB65_UP}
@@ -1589,7 +1603,7 @@ const
   isc_spb_current_version = AnsiChar(#2);
   isc_spb_version = isc_spb_current_version;
 {$IFDEF FB30_UP}
-  isc_spb_version3 = AnsiChar(#3);
+    isc_spb_version3 = AnsiChar(#3);
 {$ENDIF}
   isc_spb_user_name = AnsiChar(isc_dpb_user_name);
   isc_spb_sys_user_name = AnsiChar(isc_dpb_sys_user_name);
@@ -1619,7 +1633,17 @@ const
 
 {$IFDEF FB30_UP}
   isc_spb_verbint = AnsiChar(#114);
-  isc_spb_auth_block = Ansichar(#115);
+  isc_spb_auth_block = AnsiChar(#115);
+
+  isc_spb_auth_plugin_name  = AnsiChar(#116);
+  isc_spb_auth_plugin_list  = AnsiChar(#117);
+  isc_spb_utf8_filename     = AnsiChar(#118);
+  isc_spb_client_version    = AnsiChar(#119);
+  isc_spb_remote_protocol   = AnsiChar(#120);
+  isc_spb_host_name         = AnsiChar(#121);
+  isc_spb_os_user           = AnsiChar(#122);
+  isc_spb_config            = AnsiChar(#123);
+  isc_spb_expected_db       = AnsiChar(#124);
 {$ENDIF}
 
   isc_spb_connect_timeout = AnsiChar(isc_dpb_connect_timeout);
@@ -1758,6 +1782,25 @@ const
 {$ENDIF}
 {$IFDEF FB30_UP}
   fb_info_implementation = 114;
+
+  fb_info_page_warns = 115;
+  fb_info_record_warns = 116;
+  fb_info_bpage_warns = 117;
+  fb_info_dpage_warns = 118;
+  fb_info_ipage_warns = 119;
+  fb_info_ppage_warns = 120;
+  fb_info_tpage_warns = 121;
+  fb_info_pip_errors = 122;
+  fb_info_pip_warns = 123;
+
+  fb_info_pages_used = 124;
+  fb_info_pages_free = 125;
+
+  fb_info_crypt_state = 126;
+
+// enum db_info_crypt
+  fb_info_crypt_encrypted = 1;
+  fb_info_crypt_process = 2;
 {$ENDIF}
 
   isc_info_version = isc_info_isc_version;
@@ -2090,7 +2133,7 @@ const
   isc_info_svc_get_users = #68;
 {$IFDEF FB30_UP}
   // Sets authentication block for service query() call
-  isc_info_svc_auth_block = #69;
+  isc_info_svc_auth_block  = #69;
 {$ENDIF}
 
   (******************************************************
@@ -2331,6 +2374,7 @@ const
 
 {$IFDEF FB30_UP}
   isc_info_sql_explain_plan = 26;
+  isc_info_sql_stmt_flags   = 27;
 {$ENDIF}
 
 {$IFDEF IB71_UP}
@@ -3006,17 +3050,23 @@ const
   SQL_TYPE_DATE = 570;
   SQL_INT64 = 580;
 
+{$IFDEF IB7_UP}
+  SQL_BOOLEAN_IB7 = 590;
+{$ENDIF IB7_UP}
 {$IFDEF FB30_UP}
-  SQL_BOOLEAN = 32764;
+  SQL_BOOLEAN_FB3 = 32764;
 {$ENDIF}
+
+{$IFDEF FB30_UP} {$IFNDEF IB7_UP}
+   SQL_BOOLEAN = SQL_BOOLEAN_FB3;
+{$ENDIF} {$ENDIF}
+{$IFNDEF FB30_UP} {$IFDEF IB7_UP}
+   SQL_BOOLEAN = SQL_BOOLEAN_IB7;
+{$ENDIF} {$ENDIF}
 
 {$IFDEF FB25_UP}
   SQL_NULL = 32766;
 {$ENDIF}
-
-{$IFDEF IB7_UP}
-  SQL_BOOLEAN = 590;
-{$ENDIF IB7_UP}
 
   (* Historical alias for pre V6 applications *)
   SQL_DATE = SQL_TIMESTAMP;
@@ -3063,6 +3113,7 @@ const
 {$IFDEF FB30_UP}
   fb_dbg_subproc      =   5;
   fb_dbg_subfunc      =   6;
+  fb_dbg_map_curname  =   7;
 {$ENDIF}
 
   fb_dbg_arg_input = 0;

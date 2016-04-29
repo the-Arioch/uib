@@ -786,12 +786,98 @@ const
   isc_savepoint_err                     = 335544815;
   isc_generator_name                    = 335544816;
   isc_udf_name                          = 335544817;
+{$ENDIF IB71_UP}
+{$IFDEF IB71ORFB3}
   isc_sysf_argscant_both_be_zero        = 335545024;
   isc_spb_no_id                         = 335545025;
   isc_ee_blr_mismatch_null              = 335545026;
   isc_ee_blr_mismatch_length            = 335545027;
   isc_ss_out_of_bounds                  = 335545028;
-{$ENDIF IB71_UP}
+{$ENDIF IB71ORFB3}
+
+{$IFDEF FB30_UP}
+  isc_missing_data_structures          = 335545029;
+  isc_protect_sys_tab                  = 335545030;
+  isc_libtommath_generic               = 335545031;
+  isc_wroblrver2                       = 335545032;
+  isc_trunc_limits                     = 335545033;
+  isc_info_access                      = 335545034;
+  isc_svc_no_stdin                     = 335545035;
+  isc_svc_start_failed                 = 335545036;
+  isc_svc_no_switches                  = 335545037;
+  isc_svc_bad_size                     = 335545038;
+  isc_no_crypt_plugin                  = 335545039;
+  isc_cp_name_too_long                 = 335545040;
+  isc_cp_process_active                = 335545041;
+  isc_cp_already_crypted               = 335545042;
+  isc_decrypt_error                    = 335545043;
+  isc_no_providers                     = 335545044;
+  isc_null_spb                         = 335545045;
+  isc_max_args_exceeded                = 335545046;
+  isc_ee_blr_mismatch_names_count      = 335545047;
+  isc_ee_blr_mismatch_name_not_found   = 335545048;
+  isc_bad_result_set                   = 335545049;
+  isc_wrong_message_length             = 335545050;
+  isc_no_output_format                 = 335545051;
+  isc_item_finish                      = 335545052;
+  isc_miss_config                      = 335545053;
+  isc_conf_line                        = 335545054;
+  isc_conf_include                     = 335545055;
+  isc_include_depth                    = 335545056;
+  isc_include_miss                     = 335545057;
+  isc_protect_ownership                = 335545058;
+  isc_badvarnum                        = 335545059;
+  isc_sec_context                      = 335545060;
+  isc_multi_segment                    = 335545061;
+  isc_login_changed                    = 335545062;
+  isc_auth_handshake_limit             = 335545063;
+  isc_wirecrypt_incompatible           = 335545064;
+  isc_miss_wirecrypt                   = 335545065;
+  isc_wirecrypt_key                    = 335545066;
+  isc_wirecrypt_plugin                 = 335545067;
+  isc_secdb_name                       = 335545068;
+  isc_auth_data                        = 335545069;
+  isc_auth_datalength                  = 335545070;
+  isc_info_unprepared_stmt             = 335545071;
+  isc_idx_key_value                    = 335545072;
+  isc_forupdate_virtualtbl             = 335545073;
+  isc_forupdate_systbl                 = 335545074;
+  isc_forupdate_temptbl                = 335545075;
+  isc_cant_modify_sysobj               = 335545076;
+  isc_server_misconfigured             = 335545077;
+  isc_alter_role                       = 335545078;
+  isc_map_already_exists               = 335545079;
+  isc_map_not_exists                   = 335545080;
+  isc_map_load                         = 335545081;
+  isc_map_aster                        = 335545082;
+  isc_map_multi                        = 335545083;
+  isc_map_undefined                    = 335545084;
+  isc_baddpb_damaged_mode              = 335545085;
+  isc_baddpb_buffers_range             = 335545086;
+  isc_baddpb_temp_buffers              = 335545087;
+  isc_map_nodb                         = 335545088;
+  isc_map_notable                      = 335545089;
+  isc_miss_trusted_role                = 335545090;
+  isc_set_invalid_role                 = 335545091;
+  isc_cursor_not_positioned            = 335545092;
+  isc_dup_attribute                    = 335545093;
+  isc_dyn_no_priv                      = 335545094;
+  isc_dsql_cant_grant_option           = 335545095;
+  isc_read_conflict                    = 335545096;
+  isc_crdb_load                        = 335545097;
+  isc_crdb_nodb                        = 335545098;
+  isc_crdb_notable                     = 335545099;
+  isc_interface_version_too_old        = 335545100;
+  isc_fun_param_mismatch               = 335545101;
+  isc_savepoint_backout_err            = 335545102;
+  isc_domain_primary_key_notnull       = 335545103;
+  isc_invalid_attachment_charset       = 335545104;
+  isc_map_down                         = 335545105;
+  isc_login_error                      = 335545106;
+  isc_already_opened                   = 335545107;
+  isc_bad_crypt_key                    = 335545108;
+  isc_encrypt_error                    = 335545109;
+{$ENDIF}
 
   isc_gfix_db_name                      = 335740929;
   isc_gfix_invalid_sw                   = 335740930;
@@ -834,6 +920,7 @@ const
   isc_dsql_dialect_warning_expr         = 336003076;
   isc_sql_db_dialect_dtype_unsupport    = 336003077;
   isc_isc_sql_dialect_conflict_num      = 336003079;
+      isc_sql_dialect_conflict_num = isc_isc_sql_dialect_conflict_num; // FB3 ibase.h
   isc_dsql_warning_number_ambiguous     = 336003080;
   isc_dsql_warning_number_ambiguous1    = 336003081;
   isc_dsql_warn_precision_ambiguous     = 336003082;
