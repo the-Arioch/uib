@@ -1334,7 +1334,7 @@ const
   isc_dpb_gfix_attach = 66;
   isc_dpb_gstat_attach = 67;
 
- {$IFDEF FB25_UP}
+{$IFDEF FB25_UP}
   fb_shut_confirmation        =   1;
   fb_shut_preproviders        =   2;
   fb_shut_postproviders       =   4;
@@ -1346,7 +1346,9 @@ const
   fb_shutrsn_svc_stopped      = -1;
   fb_shutrsn_no_connection    = -2;
   fb_shutrsn_app_stopped      = -3;
+{$IFnDEF FB30_UP}
   fb_shutrsn_device_removed   = -4;
+{$ENDIF}
   fb_shutrsn_signal           = -5;
   fb_shutrsn_services         = -6;
   fb_shutrsn_exit_called      = -7;
@@ -1603,7 +1605,7 @@ const
   isc_spb_current_version = AnsiChar(#2);
   isc_spb_version = isc_spb_current_version;
 {$IFDEF FB30_UP}
-    isc_spb_version3 = AnsiChar(#3);
+  isc_spb_version3 = AnsiChar(#3);
 {$ENDIF}
   isc_spb_user_name = AnsiChar(isc_dpb_user_name);
   isc_spb_sys_user_name = AnsiChar(isc_dpb_sys_user_name);
@@ -1632,6 +1634,8 @@ const
 {$ENDIF}
 
 {$IFDEF FB30_UP}
+  isc_spb_specific_auth_data = isc_spb_trusted_auth;
+
   isc_spb_verbint = AnsiChar(#114);
   isc_spb_auth_block = AnsiChar(#115);
 
@@ -1897,6 +1901,13 @@ const
 
   isc_info_db_impl_linux_sh = 80;
   isc_info_db_impl_linux_sheb = 81;
+  isc_info_db_impl_linux_hppa = 82;
+  isc_info_db_impl_linux_alpha = 83;
+  isc_info_db_impl_linux_arm64 = 84;
+  isc_info_db_impl_linux_ppc64el = 85;
+{$ENDIF}
+{$IFDEF FB30_UP}
+  isc_info_db_impl_linux_ppc64 = 86;
 {$ENDIF}
 
   isc_info_db_impl_isc_a = isc_info_db_impl_isc_apl_68K;
@@ -2135,6 +2146,9 @@ const
   // Sets authentication block for service query() call
   isc_info_svc_auth_block  = #69;
 {$ENDIF}
+{$IFDEF FB25_UP}
+  isc_info_svc_stdin       = #78;
+{$ENDIF}
 
   (******************************************************
    * Parameters for isc_action_{add|delete|modify)_user *
@@ -2168,6 +2182,13 @@ const
   isc_spb_bkp_file = #5;
   isc_spb_bkp_factor = #6;
   isc_spb_bkp_length = #7;
+{$IFDEF FB30_UP}
+  isc_spb_bkp_skip_data  = #8;
+{$ENDIF}
+{$IFDEF FB25_UP}
+  isc_spb_bkp_stat  = #15;
+{$ENDIF}
+
 
   //flags
   isc_spb_bkp_ignore_checksums = $01;
@@ -2197,6 +2218,10 @@ const
   isc_spb_prp_set_sql_dialect = #14;
   isc_spb_prp_activate = $0100;
   isc_spb_prp_db_online = $0200;
+{$IFDEF FB30_UP}
+  isc_spb_prp_nolinger  = $0400; // immediately release database file after SuperServer disconnect
+{$ENDIF}
+
 {$IFDEF FB25_UP}
   isc_spb_prp_force_shutdown              = #41;
   isc_spb_prp_attachments_shutdown        = #42;
@@ -2254,6 +2279,13 @@ const
   isc_spb_tra_advise_rollback = 31;
   isc_spb_tra_advise_unknown = 33;
 
+{$IFDEF FB30_UP}
+  isc_spb_tra_id_64          = 46;
+  isc_spb_single_tra_id_64   = 47;
+  isc_spb_multi_tra_id_64    = 48;
+{$ENDIF}
+
+
   isc_spb_rpr_validate_db = $01;
   isc_spb_rpr_sweep_db = $02;
   isc_spb_rpr_mend_db = $04;
@@ -2262,6 +2294,9 @@ const
   isc_spb_rpr_ignore_checksum = $20;
   isc_spb_rpr_kill_shadows = $40;
   isc_spb_rpr_full = $80;
+{$IFDEF FB30_UP}
+  isc_spb_rpr_icu  = $800;
+{$ENDIF}
 
   (*****************************************
    * Parameters for isc_action_svc_restore *
@@ -2282,6 +2317,10 @@ const
   isc_spb_res_replace = $1000;
   isc_spb_res_create = $2000;
   isc_spb_res_use_all_space = $4000;
+
+{$IfDef FB30_UP}
+  isc_spb_res_skip_data  = isc_spb_bkp_skip_data;
+{$EndIf}
 
 {$IFDEF IB71_UP}
   isc_spb_res_validate = $8000;
@@ -2329,6 +2368,10 @@ const
 
 {$IFDEF FB20_UP}
   isc_spb_sts_nocreation  = $80;
+{$ENDIF}
+
+{$IFDEF FB30_UP}
+   isc_spb_sts_encryption = $100;
 {$ENDIF}
 
 {$IFDEF FB25_UP}
