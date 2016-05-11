@@ -3055,6 +3055,18 @@ const
 {$ENDIF IB7_UP}
 {$IFDEF FB30_UP}
   SQL_BOOLEAN_FB3 = 32764;
+
+//typedef unsigned char   ISC_UCHAR;
+//typedef ISC_UCHAR       FB_BOOLEAN;
+//#define FB_FALSE        '\0'
+//#define FB_TRUE         '\1'
+
+type
+  FB_BOOLEAN = type byte;
+
+const
+  FB_FALSE = FB_BOOLEAN(0);
+  FB_TRUE  = FB_BOOLEAN(1);
 {$ENDIF}
 
 {$IFDEF FB30_UP} {$IFNDEF IB7_UP}
