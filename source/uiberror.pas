@@ -549,6 +549,12 @@ const
   isc_optimizer_between_err             = 335544813;
   isc_service_not_supported             = 335544814;
 
+{$IFDEF IB71_UP}
+  isc_savepoint_err                     = 335544815;
+  isc_generator_name                    = 335544816;
+  isc_udf_name                          = 335544817;
+{$ENDIF IB71_UP}
+
 {$IFDEF FB102_UP}
   isc_generator_name                    = 335544815;
   isc_udf_name                          = 335544816;
@@ -782,11 +788,6 @@ const
   isc_invalid_boolean_usage            = 335545023;
 {$ENDIF}
 
-{$IFDEF IB71_UP}
-  isc_savepoint_err                     = 335544815;
-  isc_generator_name                    = 335544816;
-  isc_udf_name                          = 335544817;
-{$ENDIF IB71_UP}
 {$IFDEF IB71ORFB3}
   isc_sysf_argscant_both_be_zero        = 335545024;
   isc_spb_no_id                         = 335545025;
@@ -927,6 +928,10 @@ const
   isc_dsql_warn_precision_ambiguous1    = 336003083;
   isc_dsql_warn_precision_ambiguous2    = 336003084;
 
+{$IFDEF IB65_UP}
+  isc_dsql_rows_ties_err                = 336003085;
+{$ENDIF IB65_UP}
+
 {$IFDEF FB102_UP}
   isc_dsql_ambiguous_field_name         = 336003085;
   isc_dsql_udf_return_pos_err           = 336003086;
@@ -959,6 +964,15 @@ const
 {$ENDIF}
 
 {$IFDEF FB30_UP}
+  isc_dsql_record_version_table        = 336003104;
+  isc_dsql_invalid_sqlda_version       = 336003105;
+  isc_dsql_sqlvar_index                = 336003106;
+  isc_dsql_no_sqlind                   = 336003107;
+  isc_dsql_no_sqldata                  = 336003108;
+  isc_dsql_no_input_sqlda              = 336003109;
+  isc_dsql_no_output_sqlda             = 336003110;
+  isc_dsql_wrong_param_num             = 336003111;
+
   isc_dyn_filter_not_found             = 336068645;
   isc_dyn_func_not_found               = 336068649;
   isc_dyn_index_not_found              = 336068656;
@@ -985,10 +999,6 @@ const
 {$IFDEF FB25_UP}
   isc_dyn_column_does_not_exist        = 336068784;
 {$ENDIF}
-
-{$IFDEF IB65_UP}
-  isc_dsql_rows_ties_err                = 336003085;
-{$ENDIF FB15_UP}
 
 {$IFDEF IB75_UP}
   isc_dsql_cursor_stmt_err             = 336003086;
@@ -1076,6 +1086,12 @@ const
   isc_dyn_routine_param_ambiguous      = 336068888;
   isc_dyn_coll_used_function           = 336068889;
   isc_dyn_domain_used_function         = 336068890;
+  isc_dyn_alter_user_no_clause         = 336068891;
+  isc_dyn_duplicate_package_item       = 336068894;
+  isc_dyn_cant_modify_sysobj           = 336068895;
+  isc_dyn_cant_use_zero_increment      = 336068896;
+  isc_dyn_cant_use_in_foreignkey       = 336068897;
+  isc_dyn_defvaldecl_package_func      = 336068898;
 {$ENDIF}
 
 {$IFDEF IB71_UP}
@@ -1084,7 +1100,7 @@ const
 {$ENDIF IB71_UP}
 
 {$IFDEF IB75_UP}
-  isc_dyn_drop_db_owner                = 336068836;
+  isc_dyn_drop_db_owner                 = 336068836;
 {$ENDIF}
 
   isc_gbak_unknown_switch               = 336330753;
@@ -1320,6 +1336,23 @@ const
   isc_dsql_create_shadow_failed        = 336397314;
   isc_dsql_create_filter_failed        = 336397315;
   isc_dsql_create_index_failed         = 336397316;
+  isc_dsql_create_user_failed          = 336397317;
+  isc_dsql_alter_user_failed           = 336397318;
+  isc_dsql_grant_failed                = 336397319;
+  isc_dsql_revoke_failed               = 336397320;
+  isc_dsql_cte_recursive_aggregate     = 336397321;
+  isc_dsql_mapping_failed              = 336397322;
+  isc_dsql_alter_sequence_failed       = 336397323;
+  isc_dsql_create_generator_failed     = 336397324;
+  isc_dsql_set_generator_failed        = 336397325;
+  isc_dsql_wlock_simple                = 336397326;
+  isc_dsql_firstskip_rows              = 336397327;
+  isc_dsql_wlock_aggregates            = 336397328;
+  isc_dsql_wlock_conflict              = 336397329;
+  isc_dsql_max_exception_arguments     = 336397330;
+  isc_dsql_string_byte_length          = 336397331;
+  isc_dsql_string_char_length          = 336397332;
+  isc_dsql_max_nesting                 = 336397333;
 {$ENDIF}
 
 {$IFDEF IB71_UP}
@@ -1501,7 +1534,7 @@ const
 {$ENDIF}
 
 {$IFDEF FB30}
-  isc_err_max                           = 1146;
+  isc_err_max                           = 1259;
 {$ENDIF}
 
 {$IFDEF IB601}
