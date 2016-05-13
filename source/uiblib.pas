@@ -52,7 +52,7 @@ type
 
   TUIBFieldType = (uftUnKnown, uftNumeric, uftChar, uftVarchar, uftCstring, uftSmallint,
     uftInteger, uftQuad, uftFloat, uftDoublePrecision, uftTimestamp, uftBlob, uftBlobId,
-    uftDate, uftTime, uftInt64, uftArray {$IFDEF IB7_UP}, uftBoolean{$ENDIF}
+    uftDate, uftTime, uftInt64, uftArray {$IFDEF IB_FB_BOOLEAN}, uftBoolean{$ENDIF}
     {$IFDEF FB25_UP}, uftNull{$ENDIF});
 
   TScale = 1..15;
@@ -5311,7 +5311,7 @@ end;
     case FXSQLDA.sqlvar[Index].sqltype and not (1) of
       SQL_TEXT        : Result := uftChar;
       SQL_VARYING     : Result := uftVarchar;
-    {$IFDEF IB7_UP}
+    {$IFDEF IB_FB_BOOLEAN}
       SQL_BOOLEAN     : Result := uftBoolean;
     {$ENDIF}
       SQL_SHORT       : Result := uftSmallint;
@@ -6477,7 +6477,7 @@ procedure TSQLParams.AddFieldType(const Name: string; FieldType: TUIBFieldType;
       uftTime            : SetFieldType(AddField(name), SizeOf(Cardinal)     , SQL_TYPE_TIME + 1, 0);
       uftInt64           : SetFieldType(AddField(name), SizeOf(Int64)        , SQL_INT64     + 1, 0);
       uftArray           : SetFieldType(AddField(name), SizeOf(TISCQuad)     , SQL_ARRAY     + 1, 0);
-  {$IFDEF IB7_UP}
+  {$IFDEF IB_FB_BOOLEAN}
       uftBoolean         : SetFieldType(AddField(name), SizeOf(Smallint)     , SQL_BOOLEAN   + 1, 0);
   {$ENDIF}
     end;

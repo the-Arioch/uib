@@ -454,13 +454,18 @@ begin
           PInteger(Buffer)^ := PCardinal(sqldata)^ div 10 else
           PDouble(Buffer)^ := PCardinal(sqldata)^ / TimeCoeff;
       uftInt64:PInt64(Buffer)^ := PInt64(sqldata)^;
-    {$IFDEF IB7_UP}
+    {$IFDEF IB_FB_BOOLEAN}
       uftBoolean:
+      {$IFDEF IB_7UP}
         {$IFDEF FPC}
           Boolean(Buffer^) := PSmallInt(sqldata)^ = ISC_TRUE;
         {$ELSE}
           WordBool(Buffer^) := PSmallInt(sqldata)^ = ISC_TRUE;
         {$ENDIF}
+      {$ENDIF}
+      {$IfDef FB3_UP}
+        Boolean(Buffer^) := pFB_BOOLEAN(sqldata)^ = FB_TRUE;
+      {$EndIf}
     {$ENDIF}
     else
       raise EUIBError.Create(EUIB_UNEXPECTEDERROR);
@@ -841,7 +846,7 @@ begin
         uftDate : DataType := ftDate;
         uftTime : DataType := ftTime;
         uftInt64: DataType := ftLargeint;
-      {$IFDEF IB7_UP}
+      {$IFDEF IB_FB_BOOLEAN}
         uftBoolean: DataType := ftBoolean;
       {$ENDIF}
       else

@@ -933,7 +933,7 @@ const
   FieldTypes: array [TUIBFieldType] of string =
    ('', 'NUMERIC', 'CHAR', 'VARCHAR', 'CSTRING', 'SMALLINT', 'INTEGER', 'QUAD',
     'FLOAT', 'DOUBLE PRECISION', 'TIMESTAMP', 'BLOB', 'BLOBID', 'DATE', 'TIME',
-    'BIGINT' , 'ARRAY'{$IFDEF IB7_UP}, 'BOOLEAN' {$ENDIF}
+    'BIGINT' , 'ARRAY'{$IFDEF IB_FB_BOOLEAN}, 'BOOLEAN' {$ENDIF}
     {$IFDEF FB25_UP}, 'NULL'{$ENDIF});
 
   QRYDefaultCharset =

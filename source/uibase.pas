@@ -3106,6 +3106,7 @@ const
 
 type
   FB_BOOLEAN = type byte;
+  pFB_BOOLEAN = ^FB_BOOLEAN;
 
 const
   FB_FALSE = FB_BOOLEAN(0);
