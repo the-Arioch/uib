@@ -3076,6 +3076,9 @@ begin
             blr_sql_date  : Params.AddFieldType(Trim(AsString[1]), uftDate);
             blr_sql_time  : Params.AddFieldType(Trim(AsString[1]), uftTime);
             blr_int64     : Params.AddFieldType(Trim(AsString[1]), uftInt64);
+          {$IFDEF FB30_UP}
+            blr_bool      : Params.AddFieldType(Trim(AsString[1]), uftBoolean);
+          {$ENDIF}
           {$IFDEF IB7_UP}
             blr_boolean_dtype : Params.AddFieldType(Trim(AsString[1]), uftBoolean);
           {$ENDIF}

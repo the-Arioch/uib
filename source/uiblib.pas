@@ -3517,7 +3517,7 @@ type
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_FLOAT     : Result := PSingle(sqldata)^;
           SQL_LONG      : Result := PInteger(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -3559,7 +3559,7 @@ type
         case ASQLCode of
           SQL_INT64     : Result := PInt64(sqldata)^;
           SQL_LONG      : Result := PInteger(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -3606,7 +3606,7 @@ type
         case ASQLCode of
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_INT64     : Result := PInt64(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -3658,7 +3658,7 @@ type
           SQL_TYPE_DATE : Result := PInteger(sqldata)^ - DateOffset;
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_LONG      : Result := PInteger(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -3698,7 +3698,7 @@ type
         end;
       end else
         case ASQLCode of
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -3765,8 +3765,8 @@ type
           SQL_DOUBLE    : Result := AnsiString(FloatToStr(PDouble(sqldata)^));
           SQL_LONG      : Result := AnsiString(IntToStr(PInteger(sqldata)^));
           SQL_FLOAT     : Result := AnsiString(FloatToStr(PSingle(sqldata)^));
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := AnsiString(BoolToStr(PSmallint(sqldata)^ = 1));
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := AnsiString(BoolToStr(PSmallint(sqldata)^ <> 0));
 {$ENDIF}
           SQL_SHORT     : Result := AnsiString(IntToStr(PSmallint(sqldata)^));
           SQL_INT64     : Result := AnsiString(IntToStr(PInt64(sqldata)^));
@@ -3828,8 +3828,8 @@ type
           SQL_DOUBLE    : Result := RawByteString(FloatToStr(PDouble(sqldata)^));
           SQL_LONG      : Result := RawByteString(IntToStr(PInteger(sqldata)^));
           SQL_FLOAT     : Result := RawByteString(FloatToStr(PSingle(sqldata)^));
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := RawByteString(BoolToStr(PSmallint(sqldata)^ = 1));
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := RawByteString(BoolToStr(PSmallint(sqldata)^ <> 0));
 {$ENDIF}
           SQL_SHORT     : Result := RawByteString(IntToStr(PSmallint(sqldata)^));
           SQL_INT64     : Result := RawByteString(IntToStr(PInt64(sqldata)^));
@@ -3879,8 +3879,8 @@ type
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_FLOAT     : Result := PSingle(sqldata)^;
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := PSmallint(sqldata)^ = 1;
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := PSmallint(sqldata)^ <> 0;
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
 {$IFDEF COMPILER6_UP}
@@ -3944,7 +3944,7 @@ type
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_FLOAT     : Result := PSingle(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN   : Result := PSmallint(sqldata)^ = 1;
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -4045,7 +4045,7 @@ type
           SQL_FLOAT     : Result := PSingle(sqldata)^;
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_INT64     : Result := PInt64(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -4120,7 +4120,7 @@ type
           SQL_TYPE_DATE : Result := PInteger(sqldata)^ - DateOffset;
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_LONG      : Result := PInteger(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -4160,7 +4160,7 @@ end;
         end;
       end else
         case ASQLCode of
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^ <> 0;
@@ -4215,7 +4215,7 @@ end;
           SQL_DOUBLE    : Result := FloatToStr(PDouble(sqldata)^);
           SQL_LONG      : Result := IntToStr(PInteger(sqldata)^);
           SQL_FLOAT     : Result := FloatToStr(PSingle(sqldata)^);
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN   : Result := BoolToStr(PSmallint(sqldata)^ = 1);
 {$ENDIF}
           SQL_SHORT     : Result := IntToStr(PSmallint(sqldata)^);
@@ -4260,7 +4260,7 @@ end;
           SQL_FLOAT     : Result := Trunc(PSingle(sqldata)^);
           SQL_INT64     : Result := PInt64(sqldata)^;
           SQL_LONG      : Result := PInteger(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -4306,9 +4306,9 @@ end;
           SQL_DOUBLE    : Result := Trunc(PDouble(sqldata)^);
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_FLOAT     : Result := Trunc(PSingle(sqldata)^);
-        {$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
-        {$ENDIF}
+{$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
           SQL_INT64     : Result := PInt64(sqldata)^;
           SQL_TEXT      : ConvertString(SQL_TEXT, Index, result);
@@ -4429,7 +4429,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(StrToTime(string(Value))) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := StrToInt(string(Value));
           SQL_FLOAT     : PSingle(sqldata)^ := StrToFloat(string(Value));
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := StrToInt(string(Value));
@@ -4474,7 +4474,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(Value) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := Trunc(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Trunc(Value);
@@ -4519,7 +4519,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := 0;
           SQL_LONG      : PInteger(sqldata)^ := Value;
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Value;
@@ -4564,7 +4564,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Value;
           SQL_LONG      : PInteger(sqldata)^ := Value;
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Value;
@@ -4606,7 +4606,7 @@ end;
           SQL_DOUBLE    : PDouble(sqldata)^   := ord(Value);
           SQL_LONG      : PInteger(sqldata)^ := ord(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := ord(Value);
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := ord(Value);
@@ -4651,7 +4651,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := 0;
           SQL_LONG      : PInteger(sqldata)^ := Value;
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Value;
@@ -4696,7 +4696,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(Value) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := Trunc(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Trunc(Value);
@@ -4741,7 +4741,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := 0;
           SQL_LONG      : PInteger(sqldata)^ := Value;
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Value;
@@ -4798,7 +4798,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(StrToTime(string(Value))) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := StrToInt(string(Value));
           SQL_FLOAT     : PSingle(sqldata)^ := StrToFloat(string(Value));
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := StrToInt(string(Value));
@@ -4846,7 +4846,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(StrToTime(Value)) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := StrToInt(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := StrToFloat(Value);
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := StrToInt(Value);
@@ -4890,7 +4890,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := 0;
           SQL_LONG      : PInteger(sqldata)^ := Value;
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Value;
@@ -4935,7 +4935,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(Value) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := Trunc(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Trunc(Value);
@@ -4985,7 +4985,7 @@ end;
           SQL_TYPE_TIME : PCardinal(sqldata)^ := Round(Frac(Value) * TimeCoeff);
           SQL_LONG      : PInteger(sqldata)^ := Trunc(Value);
           SQL_FLOAT     : PSingle(sqldata)^ := Value;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN,
 {$ENDIF}
           SQL_SHORT     : PSmallint(sqldata)^ := Trunc(Value);
@@ -5024,7 +5024,7 @@ end;
 {$IFDEF UNICODE}
       varUString:                        SetAsString(Index, Value);
 {$ENDIF}
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
       varBoolean:                        SetAsBoolean(Index, Value);
 {$ENDIF}
       varNull, VarEmpty:                 SetIsNull(index, true);
@@ -5934,8 +5934,8 @@ end;
           SQL_TYPE_TIME : Result := AnsiString(TimeToStr(PCardinal(sqldata)^ / TimeCoeff));
           SQL_LONG      : Result := AnsiString(IntToStr(PInteger(sqldata)^));
           SQL_FLOAT     : Result := AnsiString(FloatToStr(PSingle(sqldata)^));
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := AnsiString(BoolToStr(PSmallint(sqldata)^ = 1));
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := AnsiString(BoolToStr(PSmallint(sqldata)^ <> 0));
 {$ENDIF}
           SQL_SHORT     : Result := AnsiString(IntToStr(PSmallint(sqldata)^));
           SQL_INT64     : Result := AnsiString(IntToStr(PInt64(sqldata)^));
@@ -5982,8 +5982,8 @@ end;
           SQL_TYPE_TIME : Result := RawByteString(TimeToStr(PCardinal(sqldata)^ / TimeCoeff));
           SQL_LONG      : Result := RawByteString(IntToStr(PInteger(sqldata)^));
           SQL_FLOAT     : Result := RawByteString(FloatToStr(PSingle(sqldata)^));
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := RawByteString(BoolToStr(PSmallint(sqldata)^ = 1));
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := RawByteString(BoolToStr(PSmallint(sqldata)^ <> 0));
 {$ENDIF}
           SQL_SHORT     : Result := RawByteString(IntToStr(PSmallint(sqldata)^));
           SQL_INT64     : Result := RawByteString(IntToStr(PInt64(sqldata)^));
@@ -6030,8 +6030,8 @@ end;
           SQL_TYPE_TIME : Result := TimeToStr(PCardinal(sqldata)^ / TimeCoeff);
           SQL_LONG      : Result := IntToStr(PInteger(sqldata)^);
           SQL_FLOAT     : Result := FloatToStr(PSingle(sqldata)^);
-{$IFDEF IB7_UP}
-          SQL_BOOLEAN   : Result := BoolToStr(PSmallint(sqldata)^ = 1);
+{$IFDEF IB_FB_BOOLEAN}
+          SQL_BOOLEAN   : Result := BoolToStr(PSmallint(sqldata)^ <> 0);
 {$ENDIF}
           SQL_SHORT     : Result := IntToStr(PSmallint(sqldata)^);
           SQL_INT64     : Result := IntToStr(PInt64(sqldata)^);
@@ -6082,7 +6082,7 @@ end;
           SQL_TYPE_TIME : Result := PCardinal(sqldata)^ / TimeCoeff;
           SQL_LONG      : Result := PInteger(sqldata)^;
           SQL_FLOAT     : Result := PSingle(sqldata)^;
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
           SQL_BOOLEAN   : Result :=  WordBool(PSmallint(sqldata)^);
 {$ENDIF}
           SQL_SHORT     : Result := PSmallint(sqldata)^;
@@ -6811,7 +6811,7 @@ procedure TSQLParams.AddFieldType(const Name: string; FieldType: TUIBFieldType;
 
   procedure TSQLParams.SetAsBoolean(const Index: Word; const Value: Boolean);
   begin
-{$IFDEF IB7_UP}
+{$IFDEF IB_FB_BOOLEAN}
     SetFieldType(Index, sizeof(Smallint), SQL_BOOLEAN + 1, 0);
 {$ELSE}
     SetFieldType(Index, sizeof(Smallint), SQL_SHORT + 1, 0);
