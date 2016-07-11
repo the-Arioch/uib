@@ -433,7 +433,7 @@ type
     stDDL,                //
     stGetSegment,         //  blob                   READ BLOB
     stPutSegment,         //  blob                   INSERT BLOB
-    stExecProcedure,      //  invoke_procedure       EXECUTE PROCEDURE
+    stExecProcedure,      //  invoke_procedure       EXECUTE PROCEDURE, also (INSERT/UPDATE/DELETE) with RETURNING clause
     stStartTrans,         //  declare                DECLARE
     stCommit,             //  commit                 COMMIT
     stRollback,           //  rollback               ROLLBACK [WORK]
