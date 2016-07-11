@@ -2415,6 +2415,10 @@ begin
       blr_boolean_dtype:
         FFieldType := uftBoolean;
       {$ENDIF IB7_UP}
+      {$IFDEF FB30_UP}
+      blr_bool:
+        FFieldType := uftBoolean;
+      {$ENDIF}
     end;
   if (FFieldType in [uftChar, uftVarchar, uftCstring]) and
     not QField.Fields.IsNull[4] then
