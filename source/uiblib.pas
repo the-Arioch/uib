@@ -733,8 +733,9 @@ type
     function GetBof: boolean; virtual;
     function GetDataQuadOffset(const index: word): Pointer; virtual;
     function GetBlobData(const index: word): PBlobData; virtual;
+    function GetBlobCount: Integer;
     function GetArrayData(const index: word): Pointer; virtual;
-    function GetArrayCount: Word; virtual;
+    function GetArrayCount: Integer; virtual;
     function GetArrayInfos(const index: word): PArrayInfo; virtual;
   protected
     function GetAsRawByteString(const Index: Word): RawByteString; override;
@@ -754,10 +755,11 @@ type
     procedure Next; virtual;
 
     property BlobData[const index: word]: PBlobData read GetBlobData;
+    property BlobCount: Integer read GetBlobCount;
 
     property ArrayData[const index: word]: Pointer read GetArrayData;
     property ArrayInfos[const index: word]: PArrayInfo read GetArrayInfos;
-    property ArrayCount: Word read GetArrayCount;
+    property ArrayCount: Integer read GetArrayCount;
 
     procedure ReadBlob(const Index: Word; Stream: TStream); overload; virtual;
     procedure ReadBlobB(const Index: Word; var data: RawByteString); overload; virtual;
@@ -974,6 +976,8 @@ type
       var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLResult): boolean;
     function  DSQLFetchWithBlobs(var DbHandle: IscDbHandle; var TraHandle: IscTrHandle;
       var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLResult): boolean;
+    procedure DSQLLoadRecordBLOBsAndArrays
+      (var DbHandle: IscDbHandle; var TraHandle: IscTrHandle; const Fields: TSQLResult);
     procedure DSQLDescribe(var DbHandle: IscDbHandle; var TrHandle: IscTrHandle; var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLResult);
     procedure DSQLDescribeBind(var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLParams);
     procedure DSQLSetCursorName(var StmtHandle: IscStmtHandle; const cursor: AnsiString);
@@ -2138,6 +2142,58 @@ const
     end;
   end;
 
+  //  needed for stExecProcedure statements like UPDATE OR INSERT xxx RETURNING
+  procedure TUIBLibrary.DSQLLoadRecordBLOBsAndArrays
+     (var DbHandle: IscDbHandle; var TraHandle: IscTrHandle; const Fields: TSQLResult);
+  var
+    i, j: Integer;
+    destArray: Pointer;
+    SliceLen: integer;
+    BlobHandle: IscBlobHandle;
+    BlobData: PBlobData;
+  begin
+    if Fields = nil then exit;
+
+    // read array data
+    for i := 0 to length(Fields.FArrayInfos) - 1 do
+    begin
+      j := Fields.FArrayInfos[i].index;
+      if not Fields.IsNull[j] then
+      begin
+        destArray := Fields.FXSQLDA.sqlvar[j].SqlData;
+        inc(PtrInt(destArray), SizeOf(TISCQuad));
+        SliceLen := Fields.FArrayInfos[i].size;
+        ArrayGetSlice(DbHandle, TraHandle, Fields.AsQuad[j],
+          Fields.FArrayInfos[i].info, destArray, SliceLen);
+      end;
+    end;
+
+    // read blobs
+    for i := 0 to Length(Fields.FBlobsIndex) - 1 do
+    begin
+      BlobData := Fields.GetDataQuadOffset(Fields.FBlobsIndex[i]);
+      if (not Fields.FCachedFetch) and        // not stored
+        (BlobData.Size > 0)  then // not null (null if the first one)
+          FreeMem(BlobData.Buffer);
+
+      if Fields.IsNull[Fields.FBlobsIndex[i]] then
+      begin
+        BlobData.Size := 0;
+        BlobData.Buffer := nil;
+      end else
+      begin
+        BlobHandle := nil;
+        BlobOpen(DbHandle, TraHandle, BlobHandle, Fields.AsQuad[Fields.FBlobsIndex[i]]);
+        try
+          BlobReadBuffer(BlobHandle, BlobData.Size, BlobData.Buffer); // memory allocated here !!
+          inc(Fields.FStatBlobsSize, BlobData.Size);
+        finally
+          BlobClose(BlobHandle);
+        end;
+      end;
+    end;
+  end;
+
   function  TUIBLibrary.DSQLFetchWithBlobs(var DbHandle: IscDbHandle; var TraHandle: IscTrHandle;
     var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLResult): boolean;
   var
@@ -2158,44 +2214,47 @@ const
             begin
               if (Sqlda <> nil) then
               begin
-                // read array data
-                for i := 0 to length(sqlda.FArrayInfos) - 1 do
-                begin
-                  j := sqlda.FArrayInfos[i].index;
-                  if not Sqlda.IsNull[j] then
-                  begin
-                    destArray := sqlda.FXSQLDA.sqlvar[j].SqlData;
-                    inc(PtrInt(destArray), SizeOf(TISCQuad));
-                    SliceLen := sqlda.FArrayInfos[i].size;
-                    ArrayGetSlice(DbHandle, TraHandle, sqlda.AsQuad[j],
-                      sqlda.FArrayInfos[i].info, destArray, SliceLen);
-                  end;
-                end;
+//                // read array data
+//                for i := 0 to length(sqlda.FArrayInfos) - 1 do
+//                begin
+//                  j := sqlda.FArrayInfos[i].index;
+//                  if not Sqlda.IsNull[j] then
+//                  begin
+//                    destArray := sqlda.FXSQLDA.sqlvar[j].SqlData;
+//                    inc(PtrInt(destArray), SizeOf(TISCQuad));
+//                    SliceLen := sqlda.FArrayInfos[i].size;
+//                    ArrayGetSlice(DbHandle, TraHandle, sqlda.AsQuad[j],
+//                      sqlda.FArrayInfos[i].info, destArray, SliceLen);
+//                  end;
+//                end;
+//
+//                // read blobs
+//                for i := 0 to Length(Sqlda.FBlobsIndex) - 1 do
+//                begin
+//                  BlobData := sqlda.GetDataQuadOffset(Sqlda.FBlobsIndex[i]);
+//                  if (not Sqlda.FCachedFetch) and        // not stored
+//                    (BlobData.Size > 0)  then // not null (null if the first one)
+//                      FreeMem(BlobData.Buffer);
+//
+//                  if Sqlda.IsNull[Sqlda.FBlobsIndex[i]] then
+//                  begin
+//                    BlobData.Size := 0;
+//                    BlobData.Buffer := nil;
+//                  end else
+//                  begin
+//                    BlobHandle := nil;
+//                    BlobOpen(DbHandle, TraHandle, BlobHandle, Sqlda.AsQuad[Sqlda.FBlobsIndex[i]]);
+//                    try
+//                      BlobReadBuffer(BlobHandle, BlobData.Size, BlobData.Buffer); // memory allocated here !!
+//                      inc(Sqlda.FStatBlobsSize, BlobData.Size);
+//                    finally
+//                      BlobClose(BlobHandle);
+//                    end;
+//                  end;
+//                end;
 
-                // read blobs
-                for i := 0 to Length(Sqlda.FBlobsIndex) - 1 do
-                begin
-                  BlobData := sqlda.GetDataQuadOffset(Sqlda.FBlobsIndex[i]);
-                  if (not Sqlda.FCachedFetch) and        // not stored
-                    (BlobData.Size > 0)  then // not null (null if the first one)
-                      FreeMem(BlobData.Buffer);
+                DSQLLoadRecordBLOBsAndArrays(DbHandle, TraHandle, Sqlda);
 
-                  if Sqlda.IsNull[Sqlda.FBlobsIndex[i]] then
-                  begin
-                    BlobData.Size := 0;
-                    BlobData.Buffer := nil;
-                  end else
-                  begin
-                    BlobHandle := nil;
-                    BlobOpen(DbHandle, TraHandle, BlobHandle, Sqlda.AsQuad[Sqlda.FBlobsIndex[i]]);
-                    try
-                      BlobReadBuffer(BlobHandle, BlobData.Size, BlobData.Buffer); // memory allocated here !!
-                      inc(Sqlda.FStatBlobsSize, BlobData.Size);
-                    finally
-                      BlobClose(BlobHandle);
-                    end;
-                  end;
-                end;
                 // add to list after the blobs are fetched
                 if Sqlda.FCachedFetch then Sqlda.AddCurrentRecord;
               end;
@@ -5421,6 +5480,9 @@ end;
     PDesc: PArrayInfo;
     PBound: PISCArrayBound;
   begin
+    if FFetchBlobs and ( Length(FBlobsIndex) > 0 ) then
+       FreeBlobs(FDataBuffer);
+
     FDataBufferLength := 0;
     LastLen    := 0;
     BlobCount := 0;
@@ -6151,7 +6213,12 @@ end;
     end;
   end;
 
-  function TSQLResult.GetArrayCount: Word;
+  function TSQLResult.GetBlobCount: Integer;
+  begin
+    result := length(FBlobsIndex);
+  end;
+
+  function TSQLResult.GetArrayCount: Integer;
   begin
     result := length(FArrayInfos);
   end;

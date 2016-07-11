@@ -868,7 +868,7 @@ type
     property OnError: TEndTransMode read FOnError write FOnError default etmRollback;
     { If true all record are saved in memory. }
     property CachedFetch: boolean read FCachedFetch write FCachedFetch default True;
-    { If true the blob data is fetched with the record. }
+    { If true the blob and arrays data is fetched with the record. }
     property FetchBlobs: boolean read FFetchBlobs write FFetchBlobs default False;
     { Use BufferChunks to get or set the number of records for which the query
       allocates buffer space at any time. When the query’s buffer is full,
@@ -2381,9 +2381,15 @@ begin
   with FindDataBase, FLibrary do
   try
     FTransaction.BeginTransaction(true);
-    if (FStatementType = stExecProcedure) then
+    if (FStatementType = stExecProcedure) then begin
+      if FSQLResult.FetchBlobs and
+         ( FSQLResult.BlobCount <> 0 ) then ;
       DSQLExecute2(FTransaction.FTrHandle, FStHandle,
-        GetSQLDialect, FParameter, FSQLResult) else
+        GetSQLDialect, FParameter, FSQLResult);
+      if FSQLResult.FetchBlobs and
+         (( FSQLResult.ArrayCount or FSQLResult.BlobCount ) <> 0 ) then
+      DSQLLoadRecordBLOBsAndArrays( FDbHandle, FTransaction.FTrHandle, FSQLResult );
+    end else
       DSQLExecute(FTransaction.FTrHandle, FStHandle,
         GetSQLDialect, FParameter);
   except
