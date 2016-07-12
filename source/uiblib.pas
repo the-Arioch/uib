@@ -713,6 +713,7 @@ type
     FRecordPool: TPoolStream;
     FCachedFetch: boolean;
     FFetchBlobs: boolean;
+    FDataBufferManagesBLOBPointers: boolean;
     FDataBuffer: Pointer;
     FDataBufferLength: PtrInt;
     FBlobsIndex: array of Word;
@@ -749,6 +750,7 @@ type
       BufferChunks: Cardinal = 1000); reintroduce;
     destructor Destroy; override;
     procedure ClearRecords; virtual;
+    procedure ClearDataBuffer;
     procedure GetRecord(const Index: Integer); virtual;
     procedure SaveToStream(Stream: TStream); virtual;
     procedure LoadFromStream(Stream: TStream); virtual;
@@ -2151,6 +2153,7 @@ const
     SliceLen: integer;
     BlobHandle: IscBlobHandle;
     BlobData: PBlobData;
+    MustFreeOldBLOBs: boolean;
   begin
     if Fields = nil then exit;
 
@@ -2169,10 +2172,14 @@ const
     end;
 
     // read blobs
+    MustFreeOldBLOBs := Fields.FDataBufferManagesBLOBPointers;
+    Fields.FDataBufferManagesBLOBPointers := False;
     for i := 0 to Length(Fields.FBlobsIndex) - 1 do
     begin
       BlobData := Fields.GetDataQuadOffset(Fields.FBlobsIndex[i]);
-      if (not Fields.FCachedFetch) and        // not stored
+
+//      if (not Fields.FCachedFetch) and        // not stored
+      if MustFreeOldBLOBs and        // not stored
         (BlobData.Size > 0)  then // not null (null if the first one)
           FreeMem(BlobData.Buffer);
 
@@ -2187,6 +2194,7 @@ const
         try
           BlobReadBuffer(BlobHandle, BlobData.Size, BlobData.Buffer); // memory allocated here !!
           inc(Fields.FStatBlobsSize, BlobData.Size);
+          Fields.FDataBufferManagesBLOBPointers := True;              // memorize resposibility to manage that memory
         finally
           BlobClose(BlobHandle);
         end;
@@ -2214,45 +2222,6 @@ const
             begin
               if (Sqlda <> nil) then
               begin
-//                // read array data
-//                for i := 0 to length(sqlda.FArrayInfos) - 1 do
-//                begin
-//                  j := sqlda.FArrayInfos[i].index;
-//                  if not Sqlda.IsNull[j] then
-//                  begin
-//                    destArray := sqlda.FXSQLDA.sqlvar[j].SqlData;
-//                    inc(PtrInt(destArray), SizeOf(TISCQuad));
-//                    SliceLen := sqlda.FArrayInfos[i].size;
-//                    ArrayGetSlice(DbHandle, TraHandle, sqlda.AsQuad[j],
-//                      sqlda.FArrayInfos[i].info, destArray, SliceLen);
-//                  end;
-//                end;
-//
-//                // read blobs
-//                for i := 0 to Length(Sqlda.FBlobsIndex) - 1 do
-//                begin
-//                  BlobData := sqlda.GetDataQuadOffset(Sqlda.FBlobsIndex[i]);
-//                  if (not Sqlda.FCachedFetch) and        // not stored
-//                    (BlobData.Size > 0)  then // not null (null if the first one)
-//                      FreeMem(BlobData.Buffer);
-//
-//                  if Sqlda.IsNull[Sqlda.FBlobsIndex[i]] then
-//                  begin
-//                    BlobData.Size := 0;
-//                    BlobData.Buffer := nil;
-//                  end else
-//                  begin
-//                    BlobHandle := nil;
-//                    BlobOpen(DbHandle, TraHandle, BlobHandle, Sqlda.AsQuad[Sqlda.FBlobsIndex[i]]);
-//                    try
-//                      BlobReadBuffer(BlobHandle, BlobData.Size, BlobData.Buffer); // memory allocated here !!
-//                      inc(Sqlda.FStatBlobsSize, BlobData.Size);
-//                    finally
-//                      BlobClose(BlobHandle);
-//                    end;
-//                  end;
-//                end;
-
                 DSQLLoadRecordBLOBsAndArrays(DbHandle, TraHandle, Sqlda);
 
                 // add to list after the blobs are fetched
@@ -5418,7 +5387,8 @@ end;
     ClearRecords;
     if FDataBuffer <> nil then
     begin
-      if (not FCachedFetch) and FFetchBlobs then
+//      if (not FCachedFetch) and FFetchBlobs then
+      if FDataBufferManagesBLOBPointers then
         FreeBlobs(FDataBuffer);
       FreeMem(FDataBuffer)
     end;
@@ -5432,6 +5402,7 @@ end;
       FRecordPool := TPoolStream.Create(FBufferChunks, FDataBufferLength);
     Move(FDataBuffer^, FRecordPool.Add^, FDataBufferLength);
     FCurrentRecord := FRecordPool.ItemCount - 1;
+    FDataBufferManagesBLOBPointers := False;  // memory mgmt responsibility shifted to the pool now
   end;
 
   procedure TSQLResult.ClearRecords;
@@ -5449,6 +5420,29 @@ end;
       FRecordPool := nil;
     end;
     FStatBlobsSize := 0;
+  end;
+
+  // to be called to free BLOB buffers (avoid memory leak)
+  // when FDataBuffer was not cached into FRecordPool
+  procedure TSQLResult.ClearDataBuffer;
+  var
+    i: Integer;
+    BlobData: PBlobData;
+  begin
+    if not FDataBufferManagesBLOBPointers then exit;
+    FDataBufferManagesBLOBPointers := False;
+
+    if FDataBuffer = nil then exit; // this exit only after clearing the flag above
+
+    for I := 0 to Length(FBlobsIndex) - 1 do
+    begin
+      BlobData := GetDataQuadOffset(FBlobsIndex[I]);
+      if BlobData.Size > 0 then begin
+        FreeMem(BlobData.Buffer);
+        BlobData.Size := 0;
+        BlobData.Buffer := nil;
+      end;
+    end;
   end;
 
   procedure TSQLResult.GetRecord(const Index: Integer);
@@ -5480,13 +5474,16 @@ end;
     PDesc: PArrayInfo;
     PBound: PISCArrayBound;
   begin
-    if FFetchBlobs and ( Length(FBlobsIndex) > 0 ) then
-       FreeBlobs(FDataBuffer);
-
     FDataBufferLength := 0;
     LastLen    := 0;
     BlobCount := 0;
     ArrayIndex := 0;
+
+    // judging by ReAllocMem below, this fn can be called over
+    // aready allocated buffer, which might (or might not) have
+    // unique heap pointers to BLOBs buffers
+    ClearDataBuffer;
+
     SetLength(FBlobsIndex, BlobCount);
     // calculate offsets and store them instead of pointers ;)
     for i := 0 to FXSQLDA.sqln - 1 do
@@ -5669,8 +5666,9 @@ end;
   begin
     // CleanUp
     ClearRecords;
-    if (not FCachedFetch) and FFetchBlobs then
-      FreeBlobs(FDataBuffer);
+    ClearDataBuffer;
+//    if (not FCachedFetch) and FFetchBlobs then
+//      FreeBlobs(FDataBuffer);
 
     Stream.Read(FCachedFetch, SizeOf(FCachedFetch));
     Stream.Read(FFetchBlobs, SizeOf(FFetchBlobs));

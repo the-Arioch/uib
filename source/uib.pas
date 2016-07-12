@@ -2383,7 +2383,8 @@ begin
     FTransaction.BeginTransaction(true);
     if (FStatementType = stExecProcedure) then begin
       if FSQLResult.FetchBlobs and
-         ( FSQLResult.BlobCount <> 0 ) then ;
+         ( FSQLResult.BlobCount <> 0 ) then
+           FSQLResult.ClearDataBuffer;
       DSQLExecute2(FTransaction.FTrHandle, FStHandle,
         GetSQLDialect, FParameter, FSQLResult);
       if FSQLResult.FetchBlobs and
@@ -3000,6 +3001,7 @@ begin
   begin
     try
       FSQLResult.ClearRecords;
+      FSQLResult.ClearDataBuffer; // clean-up heap of BLOBs for non-cached recordsets
       if {FUseCursor and} (FStatementType in [stSelect, stSelectForUpdate]) then
         with FindDataBase.FLibrary do
           DSQLFreeStatement(FStHandle, DSQL_close);
