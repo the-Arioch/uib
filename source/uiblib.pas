@@ -2206,11 +2206,11 @@ const
     var StmtHandle: IscStmtHandle; Dialect: Word; Sqlda: TSQLResult): boolean;
   var
     Status: ISCStatus;
-    BlobHandle: IscBlobHandle;
-    i, j: Integer;
-    destArray: Pointer;
-    SliceLen: integer;
-    BlobData: PBlobData;
+//    BlobHandle: IscBlobHandle;
+//    i, j: Integer;
+//    destArray: Pointer;
+//    SliceLen: integer;
+//    BlobData: PBlobData;
   begin
     Result := True;
     if (Sqlda <> nil) then
