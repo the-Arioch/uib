@@ -4128,6 +4128,7 @@ begin
         ssSelect, // perhaps a select statement execute a procedure ...
         ssInsertInto,
         ssDelete,
+        ssMerge,
         ssUpdate:
           begin
             FQuery.SQL.Text := trim(Parser.Statement);

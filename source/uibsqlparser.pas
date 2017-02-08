@@ -64,7 +64,7 @@ type
     toOCTET_LENGTH, toOPEN, toRESERV, toRESTART, toRETURNING, toROWS, toSCALAR_ARRAY,
     toSCHEMA, toSEQUENCE, toSTARTS, toTRAILING, toTRIM, toEOF);
 
-  TSQLStatement = (ssUnknow, ssAlterException, ssAlterTable, ssAlterTrigger,
+  TSQLStatement = (ssUnknown, ssAlterException, ssAlterTable, ssAlterTrigger,
     ssAlterProcedure, ssAlterDatabase, ssAlterDomain, ssAlterIndex, ssAlterSequence,
     ssAlterFunction, ssReadBlob, ssInsertBlob, ssCommit, ssDeclareFilter,
     ssDeclareFunction, ssDelete, ssDropException, ssDropIndex, ssDropProcedure,
@@ -76,8 +76,8 @@ type
     ssCreateProcedure, ssCreateTable, ssCreateTrigger, ssCreateView, ssCreateGenerator,
     ssCreateSequence, ssCreateDatabase, ssCreateDomain, ssCreateShadow, ssCreateRole,
     ssReplaceProcedure, ssReplaceTrigger, ssReplaceException, ssRevoke, ssRollback,
-    ssSetSavepoint, ssReleaseSavepoint, ssUndoSavepoint, ssSelect, ssUpdate, ssDebug,
-    ssAutoDDL, ssConnect, ssCommentDatabase, ssCommentDomain, ssCommentTable,
+    ssSetSavepoint, ssReleaseSavepoint, ssUndoSavepoint, ssSelect, ssUpdate, ssMerge,
+    ssDebug, ssAutoDDL, ssConnect, ssCommentDatabase, ssCommentDomain, ssCommentTable,
     ssCommentView, ssCommentProcedure, ssCommentTrigger, ssCommentFunction,
     ssCommentFilter, ssCommentException, ssCommentGenerator, ssCommentSequence,
     ssCommentIndex, ssCommentRole, ssCommentCharacterSet, ssCommentCollation,
@@ -257,7 +257,7 @@ var
 
 
 begin
-  result := ssUnknow;
+  result := ssUnknown;
 
   if FLine >= 0 then
   begin
@@ -472,6 +472,7 @@ begin
                    error;
     toSELECT: result := ssSelect;
     toUPDATE: result := ssUpdate;
+    toMERGE:  result := ssMerge;
     toCOMMENT: if (Next = toON) then
                  case Next of
                    toDATABASE: Result := ssCommentDatabase;
@@ -535,7 +536,7 @@ begin
       end;
     toEOF: result := ssEOF;
   else
-    Error('Unknow statement type.');
+    Error('Unknown statement type.');
   end;
   if (LastTock <> toScolon) and (LastTock <> toEOF) then
     SkipTo(toScolon);
