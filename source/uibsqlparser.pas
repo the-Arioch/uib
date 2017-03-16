@@ -221,17 +221,19 @@ begin
 end;
 
 function TUIBSQLParser.NextLine: boolean;
+var iNextLine: integer;
 begin
-  inc(FLine);
-  result := (FLine < FStrings.Count);
-  if result then
+  iNextLine := Succ(FLine);
+  Result := (iNextLine < FStrings.Count);
+  if Result then
   begin
+    FLine := iNextLine;
     FStr := FStrings[FLine];
     FCursor := PChar(FStr);
   end;
 end;
 
-// simple grammar analyser method
+// simple grammar analyzer method
 function TUIBSQLParser.NextStatement: TSQLStatement;
 var
   LastTock: TSQLToken;
