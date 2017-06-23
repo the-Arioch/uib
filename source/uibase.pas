@@ -1548,7 +1548,7 @@ const
   isc_tpb_version3 = #3;
   isc_tpb_consistency = #1;
   isc_tpb_concurrency = #2;
-{$IFNDEF FB_21UP}
+{$IFNDEF FB21_UP}
   isc_tpb_shared = #3;
   isc_tpb_protected = #4;
   isc_tpb_exclusive = #5;
